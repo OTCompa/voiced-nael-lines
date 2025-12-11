@@ -12,8 +12,8 @@ namespace VoicedNaelLines.Interop;
 
 public unsafe partial class ResourceLoader : IDisposable
 {
+    public const string ActorVfxCreateSig = "40 53 55 56 57 48 81 EC ?? ?? ?? ?? 0F 29 B4 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 0F B6 AC 24 ?? ?? ?? ?? 0F 28 F3 49 8B F8";
     public const string ActorVfxRemoveSig = "0F 11 48 10 48 8D 05";
-
 
     public const string ReadFileSig = "48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 41 54 41 55 41 56 41 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 63 42";
     public const string GetResourceSyncSig = "E8 ?? ?? ?? ?? 48 8B C8 8B C3 F0 0F C0 81";
@@ -31,12 +31,10 @@ public unsafe partial class ResourceLoader : IDisposable
     public const string PlaySoundSig = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? FE C2";
     public const string InitSoundSig = "E8 ?? ?? ?? ?? 8B 5D 77";
 
-    private VfxSpawn vfxSpawn;
+    public VfxSpawn? vfxSpawn;
 
-    public ResourceLoader(VfxSpawn vfxSpawn)
+    public ResourceLoader()
     {
-        this.vfxSpawn = vfxSpawn;
-
         var hooks = Plugin.GameInteropProvider;
         var sigScanner = Plugin.SigScanner;
 
@@ -54,6 +52,9 @@ public unsafe partial class ResourceLoader : IDisposable
         GetResourceAsyncHook.Enable();
 
         // VFX
+
+        var actorVfxCreateAddress = sigScanner.ScanText(ActorVfxCreateSig);
+        ActorVfxCreate = Marshal.GetDelegateForFunctionPointer<ActorVfxCreateDelegate>(actorVfxCreateAddress);
 
         var actorVfxRemoveAddressTemp = sigScanner.ScanText(ActorVfxRemoveSig) + 7;
         var actorVfxRemoveAddress = Marshal.ReadIntPtr(actorVfxRemoveAddressTemp + Marshal.ReadInt32(actorVfxRemoveAddressTemp) + 4);

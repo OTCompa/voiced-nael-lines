@@ -1,3 +1,5 @@
+// Adapted from https://github.com/0ceal0t/Dalamud-VFXEditor/blob/main/VFXEditor/Spawn/VfxSpawn.cs
+// 70661e3
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Plugin.Services;
 using System;
@@ -10,14 +12,15 @@ public unsafe class VfxSpawn : IDisposable
 {
     private record struct QueueItem(string path, IGameObject gameObject);
 
-    private GameFunctions gameFunctions;
+    private ResourceLoader resourceLoader;
     private readonly List<ActorVfx> spawnedVfxes = [];
     private readonly List<QueueItem> vfxSpawnQueue = [];
     private bool despawnVfxes = false;
 
-    public VfxSpawn(GameFunctions gameFunctions)
+    public VfxSpawn(ResourceLoader resourceLoader)
     {
-        this.gameFunctions = gameFunctions;
+        this.resourceLoader = resourceLoader;
+        resourceLoader.vfxSpawn = this;
 
         Plugin.Framework.Update += OnFrameworkUpdate;
     }
@@ -27,6 +30,7 @@ public unsafe class VfxSpawn : IDisposable
         DespawnAllVfxes();
         OnFrameworkUpdate(Plugin.Framework);
         Plugin.Framework.Update -= OnFrameworkUpdate;
+        resourceLoader.vfxSpawn = null;
     }
 
     private void OnFrameworkUpdate(IFramework framework)
@@ -36,7 +40,7 @@ public unsafe class VfxSpawn : IDisposable
         {
             if (queueItem.gameObject.IsValid())
             {
-                var vfx = new ActorVfx(gameFunctions, queueItem.path);
+                var vfx = new ActorVfx(resourceLoader, queueItem.path);
                 vfx.Create(queueItem.gameObject.Address, queueItem.gameObject.Address);
                 spawnedVfxes.Add(vfx);
             }

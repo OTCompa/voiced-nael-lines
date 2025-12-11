@@ -22,9 +22,9 @@ public unsafe class ActorVfx : BaseVfx
 {
     public ActorVfxStruct* Vfx;
 
-    private readonly GameFunctions hooks;
+    private readonly ResourceLoader hooks;
 
-    public ActorVfx(GameFunctions resourceLoader, string path) : base(path)
+    public ActorVfx(ResourceLoader resourceLoader, string path) : base(path)
     {
         hooks = resourceLoader;
     }

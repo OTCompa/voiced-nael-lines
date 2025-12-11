@@ -1,4 +1,5 @@
 using Dalamud.Game;
+using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
@@ -25,19 +26,12 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IObjectTable ObjectTable { get; private set; } = null!;
     [PluginService] internal static IChatGui ChatGui { get; private set; } = null!;
 
-    //private const string Command5Name = "/ptest";
-    private const string VfxPath = "vfx/common/eff/naelvoicelines.avfx";
-    private const ushort UCoBId = 733;
-    private const string LocalVfxFilename = "base_vfx.avfx";
-
     public Configuration Configuration { get; init; }
 
     public readonly WindowSystem WindowSystem = new("VoicedNaelLines");
     private ConfigWindow ConfigWindow { get; init; }
-    private MainWindow MainWindow { get; init; }
-    private GameFunctions gameFunctions { get; init; }
-    private VfxSpawn vfxSpawn { get; init; }
-    private ResourceLoader resourceLoader { get; init; }
+    private VfxSpawn VfxSpawn { get; init; }
+    private ResourceLoader ResourceLoader { get; init; }
     private QuoteHandler QuoteHandler { get; init; }
 
     public Plugin()
@@ -45,15 +39,12 @@ public sealed class Plugin : IDalamudPlugin
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
         ConfigWindow = new ConfigWindow(this);
-        MainWindow = new MainWindow(this);
 
         WindowSystem.AddWindow(ConfigWindow);
-        WindowSystem.AddWindow(MainWindow);
 
-        //CommandManager.AddHandler(Command5Name, new CommandInfo(OnTest)
-        //{
-        //    HelpMessage = "A useful message to display in /xlhelp"
-        //});
+#if DEBUG
+        InitDebug();
+#endif
 
         // Tell the UI system that we want our windows to be drawn throught he window system
         PluginInterface.UiBuilder.Draw += WindowSystem.Draw;
@@ -62,69 +53,79 @@ public sealed class Plugin : IDalamudPlugin
         // toggling the display status of the configuration ui
         PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUi;
 
-        // Adds another button doing the same but for the main ui of the plugin
-        PluginInterface.UiBuilder.OpenMainUi += ToggleMainUi;
+        ResourceLoader = new ResourceLoader();
+        VfxSpawn = new VfxSpawn(ResourceLoader);
+        QuoteHandler = new QuoteHandler(this, ResourceLoader, VfxSpawn);
 
-
-        gameFunctions = new GameFunctions();
-        vfxSpawn = new VfxSpawn(gameFunctions);
-        resourceLoader = new ResourceLoader(vfxSpawn);
-        QuoteHandler = new QuoteHandler(this, resourceLoader, vfxSpawn);
-
-        // TODO: need to handle case for plugin init in instance 
+        if (ClientState.TerritoryType == Constants.UCoBTerritoryId)
+        {
+            ResourceLoader.AddFileReplacement(Constants.VfxPath, Utility.GetResourcePath(PluginInterface, Constants.LocalVfxFilename));
+        }
 
         ClientState.TerritoryChanged += OnTerritoryChanged;
     }
 
     public void Dispose()
     {
+        QuoteHandler.Dispose();
+        VfxSpawn.Dispose();
+        ResourceLoader.RemoveFileReplacement(Constants.VfxPath);
         ClientState.TerritoryChanged -= OnTerritoryChanged;
-        vfxSpawn.Dispose();
-        gameFunctions.Dispose();
 
         // Unregister all actions to not leak anythign during disposal of plugin
         PluginInterface.UiBuilder.Draw -= WindowSystem.Draw;
         PluginInterface.UiBuilder.OpenConfigUi -= ToggleConfigUi;
-        PluginInterface.UiBuilder.OpenMainUi -= ToggleMainUi;
         
         WindowSystem.RemoveAllWindows();
 
         ConfigWindow.Dispose();
-        MainWindow.Dispose();
-
-        //CommandManager.RemoveHandler(Command5Name);
+#if DEBUG
+        DisposeDebug();
+#endif
     }
 
     private void OnTerritoryChanged(ushort obj)
     {
-        if (obj == UCoBId)
+        if (obj == Constants.UCoBTerritoryId)
         {
-            resourceLoader.AddFileReplacement(VfxPath, GetResourcePath(PluginInterface, LocalVfxFilename));
-        } else
+            ResourceLoader.AddFileReplacement(Constants.VfxPath, Utility.GetResourcePath(PluginInterface, Constants.LocalVfxFilename));
+        }
+        else
         {
-            resourceLoader.RemoveFileReplacement(VfxPath);
+            ResourceLoader.RemoveFileReplacement(Constants.VfxPath);
         }
     }
 
-
-    private void OnCommand(string command, string args)
+#if DEBUG
+    private const string TestCommand = "/pvnltest";
+    private void InitDebug()
     {
-        // In response to the slash command, toggle the display status of our main ui
-        MainWindow.Toggle();
+        CommandManager.AddHandler(TestCommand, new CommandInfo(OnTest)
+        {
+            HelpMessage = "A useful message to display in /xlhelp"
+        });
     }
-
-    //private void OnTest(string command, string args)
-    //{
-    //    var test = int.Parse(args);
-    //    QuoteHandler.PlayNaelQuote((QuoteHandler.NaelQuote)test);
-    //}
-
-    public static string GetResourcePath(IDalamudPluginInterface pluginInterface, string fileName)
+    private void DisposeDebug()
     {
-        var resourcesDir = Path.Combine(pluginInterface.AssemblyLocation.Directory?.FullName!, "Resources");
-        return Path.Combine(resourcesDir, fileName);
+        CommandManager.RemoveHandler(TestCommand);
     }
+    private void OnTest(string command, string args)
+    {
+        var test = int.Parse(args);
+        if (ObjectTable.LocalPlayer == null) return; 
+        var target = ObjectTable.LocalPlayer.TargetObject;
+
+        ResourceLoader.AddFileReplacement(Constants.VfxPath, Utility.GetResourcePath(PluginInterface, Constants.LocalVfxFilename));
+
+        if (target != null)
+        {
+            QuoteHandler.PlayQuote((QuoteHandler.NaelQuote)test, target);
+        } else
+        {
+            QuoteHandler.PlayQuote((QuoteHandler.NaelQuote)test, ObjectTable.LocalPlayer);
+        }
+    }
+#endif
 
     public void ToggleConfigUi() => ConfigWindow.Toggle();
-    public void ToggleMainUi() => MainWindow.Toggle();
 }

@@ -1,3 +1,4 @@
+using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
@@ -14,9 +15,6 @@ namespace VoicedNaelLines;
 
 public class QuoteHandler : IDisposable
 {
-    private const int NaelId = 8161;
-    private const string VfxPath = "vfx/common/eff/naelvoicelines.avfx";
-    private const string ScdPath = "sound/vfx/monster8/naelvoicelines.scd";
     public enum NaelQuote
     {
         InOut,
@@ -35,6 +33,7 @@ public class QuoteHandler : IDisposable
         OutStackSpread
     }
 
+    // TODO: maybe figure out a way to support other languages
     public readonly Dictionary<string, NaelQuote> QuoteDict = new Dictionary<string, NaelQuote>
     {
         { "O hallowed moon,\nshine you the iron path!", NaelQuote.InOut },
@@ -71,6 +70,8 @@ public class QuoteHandler : IDisposable
         Plugin.ChatGui.ChatMessage -= OnChatMessage;
     }
 
+    // adapted from https://github.com/hunter2actual/BigNaelQuotes/blob/master/BigNaelQuotes/BigNaelQuotes/BigNaelQuotes.cs
+    // b38c9ca
     private void OnChatMessage(XivChatType type, int timestamp, ref SeString sender, ref SeString message, ref bool isHandled)
     {
         //if (Plugin.ClientState.TerritoryType != 733) return;
@@ -78,7 +79,7 @@ public class QuoteHandler : IDisposable
 
         foreach (var payload in message.Payloads)
         {
-            if (payload is TextPayload {  Text: not null } textPayload && IsNael(sender.ToString()))
+            if (payload is TextPayload { Text: not null } textPayload && IsNael(sender.ToString()))
             {
                 if (QuoteDict.TryGetValue(textPayload.Text, out var quote))
                 {
@@ -86,10 +87,41 @@ public class QuoteHandler : IDisposable
                     Plugin.Log.Debug($"Playing for quote {(int)quote} {quote}: {textPayload.Text}");
                 } else
                 {
-                    Plugin.Log.Error($"Can't find quote for: {textPayload.Text}");
+                    Plugin.Log.Debug($"Can't find quote for: {textPayload.Text}");
                 }
             }
         }
+    }
+
+    public void PlayNaelQuote(NaelQuote quote)
+    {
+        foreach (var obj in Plugin.ObjectTable.CharacterManagerObjects)
+        {
+            if (obj.BaseId == Constants.NaelBaseId)
+            {
+                PlayQuote(quote, obj);
+                return;
+            }
+        }
+
+        Plugin.Log.Debug("Did not find Nael in object table!");
+    }
+
+    public void PlayQuote(NaelQuote quote, IGameObject obj)
+    {
+        resourceLoader.AddFileReplacement(Constants.ScdPath, GetNaelVoicePath(quote));
+        vfxSpawn.QueueActorVfx(Constants.VfxPath, obj);
+    }
+
+    private string GetNaelVoicePath(NaelQuote quote)
+    {
+        return Path.Combine(
+            Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!,
+            "Resources",
+            "VoiceLines",
+            plugin.Configuration.VoiceLineFolder,
+            $"{(int)quote}.scd"
+            );
     }
 
     private bool IsNael(string name)
@@ -102,34 +134,5 @@ public class QuoteHandler : IDisposable
         ];
 
         return names.Contains(name, StringComparer.OrdinalIgnoreCase);
-    }
-
-    public void PlayNaelQuote(NaelQuote quote)
-    {
-        foreach (var obj in Plugin.ObjectTable.CharacterManagerObjects)
-        {
-            if (obj.BaseId == NaelId)
-            {
-                //Plugin.Log.Debug("Found Nael!");
-                //var naelVoice = GetNaelVoicePath(quote);
-                //Plugin.Log.Debug(naelVoice);
-                resourceLoader.AddFileReplacement(ScdPath, GetNaelVoicePath(quote));
-                vfxSpawn.QueueActorVfx(VfxPath, obj);
-                return;
-            }
-        }
-
-        Plugin.Log.Debug("Did not find Nael in object table!");
-    }
-
-    private string GetNaelVoicePath(NaelQuote quote)
-    {
-        return Path.Combine(
-            Plugin.PluginInterface.AssemblyLocation.Directory?.FullName!,
-            "Resources",
-            "VoiceLines",
-            plugin.Configuration.VoiceLineFolder,
-            $"{(int)quote}.scd"
-            );
     }
 }

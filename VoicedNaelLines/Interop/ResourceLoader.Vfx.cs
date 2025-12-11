@@ -7,14 +7,16 @@ namespace VoicedNaelLines.Interop;
 
 public unsafe partial class ResourceLoader
 {
-    public delegate IntPtr ActorVfxRemoveDelegate(IntPtr vfx, char a2);
+    public delegate IntPtr ActorVfxCreateDelegate(string path, IntPtr a2, IntPtr a3, float a4, char a5, ushort a6, char a7);
+    public ActorVfxCreateDelegate ActorVfxCreate;
 
+    public delegate IntPtr ActorVfxRemoveDelegate(IntPtr vfx, char a2);
     public ActorVfxRemoveDelegate ActorVfxRemove;
     public Hook<ActorVfxRemoveDelegate> ActorVfxRemoveHook { get; private set; }
 
     private IntPtr ActorVfxRemoveDetour(IntPtr vfx, char a2)
     {
-        this.vfxSpawn.InteropRemoved(vfx);
+        this.vfxSpawn?.InteropRemoved(vfx);
         return ActorVfxRemoveHook.Original(vfx, a2);
     }
 }
