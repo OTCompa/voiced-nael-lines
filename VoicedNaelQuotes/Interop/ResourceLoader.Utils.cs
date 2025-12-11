@@ -1,6 +1,6 @@
 // Adapted from https://github.com/0ceal0t/Dalamud-VFXEditor/blob/main/VFXEditor/Interop/ResourceLoader.Utils.cs
 // d0c9072
-namespace VoicedNaelLines.Interop;
+namespace VoicedNaelQuotes.Interop;
 
 public unsafe partial class ResourceLoader
 {

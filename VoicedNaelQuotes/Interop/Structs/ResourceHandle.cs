@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using CsHandle = FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 
-namespace VoicedNaelLines.Interop.Structs
+namespace VoicedNaelQuotes.Interop.Structs
 {
     public enum LoadState : byte
     {

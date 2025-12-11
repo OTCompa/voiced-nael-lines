@@ -3,7 +3,7 @@ using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
 
-namespace VoicedNaelLines.Interop.Structs;
+namespace VoicedNaelQuotes.Interop.Structs;
 
 [StructLayout(LayoutKind.Explicit)]
 public unsafe struct ActorVfxStruct

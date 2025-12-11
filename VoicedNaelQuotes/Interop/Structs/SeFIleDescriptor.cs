@@ -3,7 +3,7 @@
 using FFXIVClientStructs.FFXIV.Client.System.Resource.Handle;
 using System.Runtime.InteropServices;
 
-namespace VoicedNaelLines.Interop.Structs;
+namespace VoicedNaelQuotes.Interop.Structs;
 
 [StructLayout(LayoutKind.Explicit)]
 public unsafe struct SeFileDescriptor

@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VoicedNaelLines.Interop;
+namespace VoicedNaelQuotes.Interop;
 
 public unsafe partial class ResourceLoader : IDisposable
 {

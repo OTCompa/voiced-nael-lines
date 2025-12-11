@@ -4,9 +4,9 @@ using Dalamud.Hooking;
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using VoicedNaelLines;
+using VoicedNaelQuotes;
 
-namespace VoicedNaelLines.Interop
+namespace VoicedNaelQuotes.Interop
 {
     public unsafe partial class ResourceLoader
     {

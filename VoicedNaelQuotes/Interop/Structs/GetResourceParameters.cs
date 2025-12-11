@@ -2,7 +2,7 @@
 // c67443c
 using System.Runtime.InteropServices;
 
-namespace VoicedNaelLines.Interop.Structs;
+namespace VoicedNaelQuotes.Interop.Structs;
 
 [StructLayout(LayoutKind.Explicit)]
 public struct GetResourceParameters

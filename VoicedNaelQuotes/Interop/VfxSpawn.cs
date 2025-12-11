@@ -4,9 +4,9 @@ using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Plugin.Services;
 using System;
 using System.Collections.Generic;
-using VoicedNaelLines.Interop.Structs;
+using VoicedNaelQuotes.Interop.Structs;
 
-namespace VoicedNaelLines.Interop;
+namespace VoicedNaelQuotes.Interop;
 
 public unsafe class VfxSpawn : IDisposable
 {

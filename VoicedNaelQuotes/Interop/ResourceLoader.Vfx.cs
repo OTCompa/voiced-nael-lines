@@ -3,7 +3,7 @@
 using System;
 using Dalamud.Hooking;
 
-namespace VoicedNaelLines.Interop;
+namespace VoicedNaelQuotes.Interop;
 
 public unsafe partial class ResourceLoader
 {

@@ -7,10 +7,10 @@ using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using System;
 using System.IO;
-using VoicedNaelLines.Interop;
-using VoicedNaelLines.Windows;
+using VoicedNaelQuotes.Interop;
+using VoicedNaelQuotes.Windows;
 
-namespace VoicedNaelLines;
+namespace VoicedNaelQuotes;
 
 public sealed class Plugin : IDalamudPlugin
 {
@@ -28,7 +28,7 @@ public sealed class Plugin : IDalamudPlugin
 
     public Configuration Configuration { get; init; }
 
-    public readonly WindowSystem WindowSystem = new("VoicedNaelLines");
+    public readonly WindowSystem WindowSystem = new("VoicedNaelQuotes");
     private ConfigWindow ConfigWindow { get; init; }
     private VfxSpawn VfxSpawn { get; init; }
     private ResourceLoader ResourceLoader { get; init; }
@@ -97,7 +97,7 @@ public sealed class Plugin : IDalamudPlugin
     }
 
 #if DEBUG
-    private const string TestCommand = "/pvnltest";
+    private const string TestCommand = "/pvnqtest";
     private void InitDebug()
     {
         CommandManager.AddHandler(TestCommand, new CommandInfo(OnTest)

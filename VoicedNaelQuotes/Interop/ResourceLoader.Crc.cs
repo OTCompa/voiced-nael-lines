@@ -3,13 +3,13 @@
 using Dalamud.Hooking;
 using Dalamud.Utility.Signatures;
 using Penumbra.String.Classes;
-using VoicedNaelLines.Interop.Structs;
+using VoicedNaelQuotes.Interop.Structs;
 using System;
 using System.Collections.Generic;
 using System.Security.AccessControl;
 using System.Threading;
 
-namespace VoicedNaelLines.Interop;
+namespace VoicedNaelQuotes.Interop;
 
 public unsafe partial class ResourceLoader
 {

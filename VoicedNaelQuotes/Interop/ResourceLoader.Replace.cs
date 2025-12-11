@@ -1,6 +1,6 @@
 // Adapted from https://github.com/0ceal0t/Dalamud-VFXEditor/blob/main/VFXEditor/Interop/ResourceLoader.Replace.cs
 // 9e528e0
-using VoicedNaelLines.Interop.Structs;
+using VoicedNaelQuotes.Interop.Structs;
 using Dalamud.Hooking;
 using Penumbra.String;
 using Penumbra.String.Classes;
@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Text;
 
-namespace VoicedNaelLines.Interop;
+namespace VoicedNaelQuotes.Interop;
 
 public unsafe partial class ResourceLoader
 {

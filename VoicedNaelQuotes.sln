@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36301.6
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoicedNaelLines", "VoicedNaelLines\VoicedNaelLines.csproj", "{13C812E9-0D42-4B95-8646-40EEBF30636F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoicedNaelQuotes", "VoicedNaelQuotes\VoicedNaelQuotes.csproj", "{13C812E9-0D42-4B95-8646-40EEBF30636F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0B5FFF21-0ACB-540E-0EAA-13E1F8F719DB} = {0B5FFF21-0ACB-540E-0EAA-13E1F8F719DB}
 	EndProjectSection

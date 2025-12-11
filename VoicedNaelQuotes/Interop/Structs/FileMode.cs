@@ -1,6 +1,6 @@
 // Adapted from https://github.com/xivdev/Penumbra/blob/master/Penumbra/Interop/Structs/FileMode.cs
 // 2b4a01d
-namespace VoicedNaelLines.Interop.Structs;
+namespace VoicedNaelQuotes.Interop.Structs;
 
 public enum FileMode : byte
 {

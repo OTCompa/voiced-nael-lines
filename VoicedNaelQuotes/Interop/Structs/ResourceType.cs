@@ -1,6 +1,6 @@
 // Adapted from https://github.com/0ceal0t/Dalamud-VFXEditor/blob/main/VFXEditor/Interop/Enums.cs
 // ec33be5
-namespace VoicedNaelLines.Interop;
+namespace VoicedNaelQuotes.Interop;
 
 public enum ResourceType : uint
 {

@@ -2,7 +2,7 @@
 // 9e528e0
 using Dalamud;
 using Penumbra.String;
-using VoicedNaelLines.Interop.Structs;
+using VoicedNaelQuotes.Interop.Structs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +10,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace VoicedNaelLines.Interop;
+namespace VoicedNaelQuotes.Interop;
 
 public static unsafe class InteropUtils
 {

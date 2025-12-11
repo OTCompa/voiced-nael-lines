@@ -4,7 +4,7 @@
 using System;
 using System.Numerics;
 
-namespace VoicedNaelLines.Interop.Structs;
+namespace VoicedNaelQuotes.Interop.Structs;
 
 /*
     *(undefined4 *)(vfx + 0x50) = DAT_01bb2850;
