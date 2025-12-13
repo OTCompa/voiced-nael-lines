@@ -30,7 +30,9 @@ public class QuoteHandler : IDisposable
         InOutSpread,
         InSpreadStack,
         OutSpreadStack,
-        OutStackSpread
+        OutStackSpread,
+        AddsRP1,
+        AddsRP2,
     }
 
     // TODO: maybe figure out a way to support other languages
@@ -50,6 +52,8 @@ public class QuoteHandler : IDisposable
         { "From hallowed moon I descend,\nupon burning earth to tread!", NaelQuote.InSpreadStack },
         { "Unbending iron,\ndescend with fiery edge!", NaelQuote.OutSpreadStack },
         { "Unbending iron,\ntake fire and descend!", NaelQuote.OutStackSpread },
+        { "O Bahamut! We shall stand guard as you make ready your divine judgment!", NaelQuote.AddsRP1},
+        { "Ugh... None shall defy Lord Bahamut's will! On your knees, vermin!", NaelQuote.AddsRP2 },
     };
 
     private Plugin plugin;
