@@ -18,7 +18,7 @@ public class ConfigWindow : Window, IDisposable
         Flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoScrollWithMouse;
 
-        Size = new Vector2(400, 70);
+        Size = new Vector2(400, 90);
         SizeCondition = ImGuiCond.Always;
 
         this.plugin = plugin;
@@ -47,6 +47,13 @@ public class ConfigWindow : Window, IDisposable
         if (ImGui.Button("Sample"))
         {
             plugin.SampleQuote();
+        }
+
+        var disableDirectionalAudio = configuration.DisableDirectionalAudio;
+        if (ImGui.Checkbox("Disable directional audio", ref disableDirectionalAudio))
+        {
+            configuration.DisableDirectionalAudio = disableDirectionalAudio;
+            configuration.Save();
         }
     }
 }

@@ -3,6 +3,7 @@ using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Plugin.Services;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Generic;
@@ -78,22 +79,37 @@ public partial class QuoteHandler : IDisposable
 
     public void PlayNaelQuote(NaelQuote quote)
     {
-        foreach (var obj in Plugin.ObjectTable.CharacterManagerObjects)
+        IGameObject? actor = null;
+        if (!plugin.Configuration.DisableDirectionalAudio)
         {
-            if (obj.BaseId == Constants.NaelBaseId)
+            foreach (var obj in Plugin.ObjectTable.CharacterManagerObjects)
             {
-                PlayQuote(quote, obj);
-                return;
+                if (obj.BaseId == Constants.NaelBaseId)
+                {
+                    actor = obj;
+                    return;
+                }
+            }
+
+            if (actor == null)
+            {
+                Plugin.Log.Debug("Did not find Nael in object table!");
             }
         }
 
-        Plugin.Log.Debug("Did not find Nael in object table!");
+        PlayQuote(quote, actor);
     }
 
-    public void PlayQuote(NaelQuote quote, IGameObject obj)
+    public void PlayQuote(NaelQuote quote, IGameObject? obj)
     {
         resourceLoader.AddFileReplacement(Constants.ScdPath, GetNaelVoicePath(quote));
-        vfxSpawn.QueueActorVfx(Constants.VfxPath, obj);
+        if (!plugin.Configuration.DisableDirectionalAudio && obj != null)
+        {
+            vfxSpawn.QueueActorVfx(Constants.VfxPath, obj);
+        } else
+        {
+            resourceLoader.PlaySound(Constants.ScdPath, 0);
+        }
     }
 
     private string GetNaelVoicePath(NaelQuote quote)
