@@ -19,39 +19,42 @@ public class QuoteHandler : IDisposable
     {
         InOut,
         InStack,
-        StackIn,
         StackOut,
-        SpreadIn,
+        StackIn,
         SpreadOut,
-        DiveStack,
+        SpreadIn,
         SpreadDive,
-        InSpreadStream,
+        DiveStack,
         SpreadInStream,
-        InOutSpread,
-        InSpreadStack,
-        OutSpreadStack,
+        InSpreadStream,
         OutStackSpread,
+        OutSpreadStack,
+        InSpreadStack,
+        InOutSpread,
         AddsRP1,
         AddsRP2,
     }
 
+
     // TODO: maybe figure out a way to support other languages
+    // NpcYell 6492-6497, 6500-6507
+    // InstanceContentTextData, 18100 18101
     public readonly Dictionary<string, NaelQuote> QuoteDict = new Dictionary<string, NaelQuote>
     {
         { "O hallowed moon,\nshine you the iron path!", NaelQuote.InOut },
         { "O hallowed moon,\ntake fire and scorch my foes!", NaelQuote.InStack },
-        { "Take fire,\nO hallowed moon!", NaelQuote.StackIn },
         { "Blazing path,\nlead me to iron rule!", NaelQuote.StackOut },
+        { "Take fire,\nO hallowed moon!", NaelQuote.StackIn },
+        { "From on high I descend,\nthe iron path to walk!", NaelQuote.SpreadOut },
         { "From on high I descend,\nthe hallowed moon to call!", NaelQuote.SpreadIn },
-        { "From on high I descend,\nthe iron path to walk!", NaelQuote.SpreadOut },  // redo this one
-        { "Fleeting light!\n'Neath the red moon,\nscorch you the earth!", NaelQuote.DiveStack },
         { "Fleeting light!\nAmid a rain of stars,\nexalt you the red moon!", NaelQuote.SpreadDive },
-        { "From hallowed moon I descend,\na rain of stars to bring!", NaelQuote.InSpreadStream },
+        { "Fleeting light!\n'Neath the red moon,\nscorch you the earth!", NaelQuote.DiveStack },
         { "From on high I descend,\nthe moon and stars to bring!", NaelQuote.SpreadInStream },
-        { "From hallowed moon I bare iron,\nin my descent to wield!", NaelQuote.InOutSpread },
-        { "From hallowed moon I descend,\nupon burning earth to tread!", NaelQuote.InSpreadStack },
-        { "Unbending iron,\ndescend with fiery edge!", NaelQuote.OutSpreadStack },
+        { "From hallowed moon I descend,\na rain of stars to bring!", NaelQuote.InSpreadStream },
         { "Unbending iron,\ntake fire and descend!", NaelQuote.OutStackSpread },
+        { "Unbending iron,\ndescend with fiery edge!", NaelQuote.OutSpreadStack },
+        { "From hallowed moon I descend,\nupon burning earth to tread!", NaelQuote.InSpreadStack },
+        { "From hallowed moon I bare iron,\nin my descent to wield!", NaelQuote.InOutSpread },
         { "O Bahamut! We shall stand guard as you make ready your divine judgment!", NaelQuote.AddsRP1},
         { "Ugh... None shall defy Lord Bahamut's will! On your knees, vermin!", NaelQuote.AddsRP2 },
     };
