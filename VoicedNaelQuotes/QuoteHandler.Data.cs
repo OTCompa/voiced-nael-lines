@@ -54,4 +54,6 @@ public partial class QuoteHandler
         new QuoteInfo(NaelQuote.AddsRP1, Sheet.InstanceContentTextData, 18100),
         new QuoteInfo(NaelQuote.AddsRP2, Sheet.InstanceContentTextData, 18101),
     ];
+
+    private uint naelNameRowId = 2612;
 }

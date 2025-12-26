@@ -11,13 +11,15 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using VoicedNaelQuotes.Interop;
 
 namespace VoicedNaelQuotes;
 
 public partial class QuoteHandler : IDisposable
 {
-    public readonly Dictionary<string, NaelQuote> QuoteDict = [];
+    private readonly Dictionary<string, NaelQuote> quoteDict = [];
+    private readonly string naelName;
 
     private Plugin plugin;
     private ResourceLoader resourceLoader;
@@ -39,11 +41,18 @@ public partial class QuoteHandler : IDisposable
             };
             if (!string.IsNullOrEmpty(text))
             {
-                QuoteDict[text] = quoteInfo.quote;
+                quoteDict[text] = quoteInfo.quote;
             } else
             {
                 Plugin.Log.Error($"Failed to initialize Quote: {quoteInfo.quote}");
             }
+        }
+
+        naelName = Plugin.DataManager.GameData.GetExcelSheet<BNpcName>()?.GetRow(naelNameRowId).Singular.ToString() ?? "";
+        if (string.IsNullOrEmpty(naelName))
+        {
+            Plugin.Log.Error("Failed to initialize Nael name!");
+
         }
 
         Plugin.ChatGui.ChatMessage += OnChatMessage;
@@ -63,9 +72,9 @@ public partial class QuoteHandler : IDisposable
 
         foreach (var payload in message.Payloads)
         {
-            if (payload is TextPayload { Text: not null } textPayload && IsNael(sender.ToString()))
+            if (payload is TextPayload { Text: not null } textPayload && naelName.Equals(sender.ToString()))
             {
-                if (QuoteDict.TryGetValue(textPayload.Text, out var quote))
+                if (quoteDict.TryGetValue(textPayload.Text, out var quote))
                 {
                     PlayNaelQuote(quote);
                     Plugin.Log.Debug($"Playing for quote {(int)quote} {quote}: {textPayload.Text}");
@@ -121,19 +130,5 @@ public partial class QuoteHandler : IDisposable
             ((Constants.Voicepack)plugin.Configuration.Voicepack).ToString(),
             $"{(int)quote}.scd"
             );
-    }
-
-    // adapted from https://github.com/hunter2actual/BigNaelQuotes/blob/master/BigNaelQuotes/BigNaelQuotes/BigNaelQuotes.cs
-    // b38c9ca
-    private static bool IsNael(string name)
-    {
-        string[] names =
-        [
-            "Nael deus Darnus", // EN/DE/FR
-            "ネール・デウス・ダーナス", // JP
-            "奈尔·神·达纳斯" // CN
-        ];
-
-        return names.Contains(name, StringComparer.OrdinalIgnoreCase);
     }
 }

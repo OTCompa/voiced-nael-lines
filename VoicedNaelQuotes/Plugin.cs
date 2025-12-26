@@ -125,7 +125,7 @@ public sealed class Plugin : IDalamudPlugin
     private void OnTest(string command, string args)
     {
         var arg = int.Parse(args);
-        if (arg >= Enum.GetNames(typeof(QuoteHandler.NaelQuote)).Length) return;
+        if (arg >= Enum.GetNames<QuoteHandler.NaelQuote>().Length) return;
         PlayQuote((QuoteHandler.NaelQuote)arg);
 
         if (arg < 14)
@@ -147,7 +147,7 @@ public sealed class Plugin : IDalamudPlugin
 
     public void SampleQuote()
     {
-        PlayQuote((QuoteHandler.NaelQuote)random.Next(14));
+        PlayQuote((QuoteHandler.NaelQuote)random.Next(Enum.GetNames<QuoteHandler.NaelQuote>().Length));
     }
 
     private void PlayQuote(QuoteHandler.NaelQuote quote)
@@ -163,7 +163,7 @@ public sealed class Plugin : IDalamudPlugin
         }
         else
         {
-            QuoteHandler.PlayQuote(quote, ObjectTable.LocalPlayer);
+            QuoteHandler.PlayQuote(quote, null);
         }
     }
 
