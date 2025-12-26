@@ -87,7 +87,7 @@ public partial class QuoteHandler : IDisposable
                 if (obj.BaseId == Constants.NaelBaseId)
                 {
                     actor = obj;
-                    return;
+                    break;
                 }
             }
 
