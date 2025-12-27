@@ -5,6 +5,7 @@ Voiced Nael Quotes aims to add voice acting to Nael quotes in The Unending Coil 
 - Adds voice acting to Nael quotes 
 - Use different voice packs to your liking (currently only tik-tok and teto. LF VAs!)
 - (Optional) Directional in-world audio with fall-off
+- Support for different client languages (Have only tested EN, JA, DE, FR, YMMV for others)
 
 ## How It Works
 The directional audio utilizes a custom VFX (no visuals) with a sound attached to simulate in-world audio. The custom VFX and sound files are loaded through a process based on Penumbra's
@@ -12,7 +13,6 @@ runtime mod loading/file replacements.
 
 ## How To Use
 This plugin uses the "Sound Effects" volume in your game client. Please ensure sound effects are audible in-game.  
-Languages other than English are not currently supported but is planned.  
 ### Getting Started
 - Type `/xlsettings` in the chatbox or open up Dalamud's settings menu
 - Open the "Experimental" tab and scroll down to the "Custom Plugin Repositories" section
